@@ -14,6 +14,17 @@ import {
   UPDATE_CART_ITEM_SUCCESS,
 } from "./ActionType";
 
+export const get = () => async (dispatch) => {
+  dispatch({ type: GET_CART_REQUEST });
+
+  try {
+    const { response } = await api.get("/api/cart/");
+    dispatch({ type: GET_CART_SUCCESS, payload: response });
+  } catch (error) {
+    dispatch({ type: GET_CART_FAILURE, payload: error.message });
+  }
+};
+
 // Action to add a cart item
 export const addCartItem = (reqData) => async (dispatch) => {
   dispatch({ type: ADD_ITEM_CART_REQUEST });
@@ -36,7 +47,7 @@ export const removeCartItem = (reqData) => async (dispatch) => {
   dispatch({ type: REMOVE_CART_ITEM_REQUEST });
   try {
     const response = await api.delete(`/api/cart_items/${reqData.cartItemId}`);
-    dispatch({ type: REMOVE_CART_ITEM_SUCCESS, payload: response.data });
+    dispatch({ type: REMOVE_CART_ITEM_SUCCESS, payload: response.cartItemId });
   } catch (error) {
     dispatch({ type: REMOVE_CART_ITEM_FAILURE, payload: error.message }); // Changed to GET_CART_FAILURE to indicate an error
   }
