@@ -28,7 +28,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { findProducts } from "../../../State/Product/Action";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -91,6 +93,18 @@ export default function Product() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const param = useParams();
+
+  const decodedQueryString = decodeURIComponent(location.search);
+  const searchParams = new URLSearchParams(decodedQueryString);
+  const colourValue = searchParams.get("color");
+  const sizeValue = searchParams.get("size");
+  const priceValue = searchParams.get("price");
+  const discountValue = searchParams.get("discount");
+  const sortValue = searchParams.get("sort");
+  const pageNumber = searchParams.get("page");
+  const stock = searchParams.get("stock");
+  const dispatch = useDispatch();
 
   const handleFilter = (value, sectionId) => {
     // Create a URLSearchParams object from the current URL's search parameters
@@ -132,11 +146,46 @@ export default function Product() {
 
   const handleRadioFilterChange = (e, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
-
     searchParams.set(sectionId, e.target.value);
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+
+  // useEffect(() => {
+  //   console.log("before priceValue:", priceValue);
+  //   const [minPrice, maxPrice] =
+  //     priceValue === null ? [0, 0] : priceValue.split("-").map(Number);
+  //   console.log("after priceValue:", minPrice);
+  // }, []);
+
+  useEffect(() => {
+    return () => {
+      const [minPrice, maxPrice] =
+        priceValue === null ? [0, 0] : priceValue.split("-");
+      const data = {
+        category: param.levelThree,
+        colours: colourValue || null,
+        sizes: sizeValue || null,
+        minPrice,
+        maxPrice,
+        minDiscount: discountValue || 0,
+        pageNumber: pageNumber - 1,
+        sort: sortValue || "price_low",
+        pageSize: 10,
+        stock: stock,
+      };
+      dispatch(findProducts(data));
+    };
+  }, [
+    param.levelThree,
+    colourValue,
+    sizeValue,
+    priceValue,
+    discountValue,
+    pageNumber,
+    stock,
+    sortValue,
+  ]);
 
   return (
     <div className="bg-white">
@@ -448,7 +497,7 @@ export default function Product() {
                                   <div key={option.value}>
                                     <FormControlLabel
                                       onChange={(e) =>
-                                        handleRadioFilterChange(e, option.value)
+                                        handleRadioFilterChange(e, section.id)
                                       }
                                       value={option.value}
                                       control={<Radio />}

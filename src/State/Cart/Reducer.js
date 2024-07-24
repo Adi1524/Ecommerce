@@ -22,7 +22,7 @@ const initialState = {
 
 export const customerCartReducer = (state = initialState, action) => {
   switch (action.type) {
-    //AddItem to cart reducer
+    // AddItem to cart reducer
     case ADD_ITEM_CART_REQUEST:
       return { ...state, loading: true, error: null };
     case ADD_ITEM_CART_SUCCESS:
@@ -34,9 +34,10 @@ export const customerCartReducer = (state = initialState, action) => {
       };
     case ADD_ITEM_CART_FAILURE:
       return { ...state, loading: false, error: action.payload };
-    //getCart reducer
+
+    // getCart reducer
     case GET_CART_REQUEST:
-      return { ...state, loading: false, error: null };
+      return { ...state, loading: true, error: null };
     case GET_CART_SUCCESS:
       return {
         ...state,
@@ -47,21 +48,21 @@ export const customerCartReducer = (state = initialState, action) => {
       };
     case GET_CART_FAILURE:
       return { ...state, loading: false, error: action.payload };
-    //remove cart reducer
+
+    // remove cart item reducer
     case REMOVE_CART_ITEM_REQUEST:
-      return { ...state, loading: false, error: null };
+      return { ...state, loading: true, error: null };
     case REMOVE_CART_ITEM_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
-        cartItems: state.cartItems.filter((item) => item.id != action.payload),
+        cartItems: state.cartItems.filter((item) => item.id !== action.payload),
       };
     case REMOVE_CART_ITEM_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
-    //update cartItem reducer
-
+    // update cart item reducer
     case UPDATE_CART_ITEM_REQUEST:
       return { ...state, loading: true, error: null };
     case UPDATE_CART_ITEM_SUCCESS:
@@ -70,12 +71,13 @@ export const customerCartReducer = (state = initialState, action) => {
         loading: false,
         error: null,
         cartItems: state.cartItems.map((item) =>
-          item.id == action.payload.id ? action.payload : item
+          item.id === action.payload.id ? action.payload : item
         ),
       };
     case UPDATE_CART_ITEM_FAILURE:
       return { ...state, loading: false, error: action.payload };
+
     default:
-      state;
+      return state;
   }
 };
