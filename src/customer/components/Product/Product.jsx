@@ -29,7 +29,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { findProducts } from "../../../State/Product/Action";
 
 const sortOptions = [
@@ -91,20 +91,21 @@ function classNames(...classes) {
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  const param = useParams();
-
-  const decodedQueryString = decodeURIComponent(location.search);
+  const decodedQueryString = decodeURIComponent(window.location.search);
   const searchParams = new URLSearchParams(decodedQueryString);
-  const colourValue = searchParams.get("color");
-  const sizeValue = searchParams.get("size");
+  const colourValue = searchParams.get("Color");
+  const sizeValue = searchParams.get("Size");
   const priceValue = searchParams.get("price");
   const discountValue = searchParams.get("discount");
   const sortValue = searchParams.get("sort");
   const pageNumber = searchParams.get("page");
   const stock = searchParams.get("stock");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const param = useParams();
   const dispatch = useDispatch();
+  const { product } = useSelector((store) => store);
 
   const handleFilter = (value, sectionId) => {
     // Create a URLSearchParams object from the current URL's search parameters
@@ -139,7 +140,6 @@ export default function Product() {
 
     // Convert the updated searchParams to a query string
     const query = searchParams.toString();
-
     // Navigate to the updated URL with the new search parameters
     navigate({ search: `?${query}` });
   };
@@ -151,29 +151,23 @@ export default function Product() {
     navigate({ search: `?${query}` });
   };
 
-  // useEffect(() => {
-  //   console.log("before priceValue:", priceValue);
-  //   const [minPrice, maxPrice] =
-  //     priceValue === null ? [0, 0] : priceValue.split("-").map(Number);
-  //   console.log("after priceValue:", minPrice);
-  // }, []);
-
   useEffect(() => {
+    const [minPrice, maxPrice] =
+      priceValue === null ? [0, 0] : priceValue.split("-");
+
+    const data = {
+      category: param.levelThree,
+      color: colourValue || [],
+      size: sizeValue || [],
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 10000,
+      minDiscount: discountValue || 0,
+      pageNumber: 0,
+      sort: sortValue || "price_low",
+      pageSize: 10,
+      stock: stock,
+    };
     return () => {
-      const [minPrice, maxPrice] =
-        priceValue === null ? [0, 0] : priceValue.split("-");
-      const data = {
-        category: param.levelThree,
-        colours: colourValue || null,
-        sizes: sizeValue || null,
-        minPrice,
-        maxPrice,
-        minDiscount: discountValue || 0,
-        pageNumber: pageNumber - 1,
-        sort: sortValue || "price_low",
-        pageSize: 10,
-        stock: stock,
-      };
       dispatch(findProducts(data));
     };
   }, [
@@ -422,7 +416,7 @@ export default function Product() {
                           <div className="space-y-4">
                             {section.options.map((option, optionIdx) => (
                               <div
-                                key={option.value}
+                                key={optionIdx}
                                 className="flex items-center"
                               >
                                 <input
@@ -516,10 +510,16 @@ export default function Product() {
               </form>
 
               {/* Product grid */}
-              <div className="grid gap-x-10 gap-y-8  ssm:grid-cols-2 lg:grid-cols-4 xl:gap-x-[26vh]">
-                {productList.map((item) => (
-                  <ProductCard key={item.id} item={item} />
-                ))}
+              <div className="lg:col-span-4 w-full ">
+                <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md ">
+                  {product.products.content ? (
+                    product.products.content.map((item) => (
+                      <ProductCard key={item.id} item={item} />
+                    ))
+                  ) : (
+                    <h1>is loading</h1>
+                  )}
+                </div>
               </div>
             </div>
           </section>

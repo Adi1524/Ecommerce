@@ -23,12 +23,13 @@ export const findProducts = (reqData) => async (dispatch) => {
     pageSize,
   } = reqData;
   try {
-    const { dataResponse } = await api.get(
+    const { data } = await api.get(
       `/api/products?color=${color}&size=${size}&minPrice=${minPrice}&maxPrice=${maxPrice}&minDiscount=${minDiscount}&category=${category}&stock=${stock}&sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
-    console.log("dataResponse", dataResponse);
+    console.log("data response from action", data);
 
-    dispatch({ type: FIND_PRODUCTS_SUCCESS, payload: dataResponse });
+    dispatch({ type: FIND_PRODUCTS_SUCCESS, payload: data });
+    console.log("data response from action", data);
   } catch (error) {
     dispatch({ type: FIND_PRODUCTS_FAILURE, payload: error.message });
   }
