@@ -37,6 +37,7 @@ export const addCartItem = (reqData) => async (dispatch) => {
       quantity,
     });
     dispatch({ type: ADD_ITEM_CART_SUCCESS, payload: response.data });
+    console.log("the added product to the cart:", response.data);
   } catch (error) {
     dispatch({ type: ADD_ITEM_CART_FAILURE, payload: error.message });
   }

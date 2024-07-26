@@ -20,7 +20,7 @@ const ProductCard = ({ item }) => {
 
   return (
     <div
-      onClick={() => navigate("/product/{5}")}
+      onClick={() => navigate(`/product/${item.id}`)}
       className="productCard w-[15rem] m-3 transition-all cursor-pointer"
     >
       <div className="h-[20rem] ">

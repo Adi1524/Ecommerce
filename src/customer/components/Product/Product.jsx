@@ -31,6 +31,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { findProducts } from "../../../State/Product/Action";
+import { Pagination } from "@mui/material";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -144,6 +145,13 @@ export default function Product() {
     navigate({ search: `?${query}` });
   };
 
+  const handlePaginationChange = (event, value) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("page", value);
+    const query = searchParams.toString();
+    navigate({ search: `${query}` });
+  };
+
   const handleRadioFilterChange = (e, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
     searchParams.set(sectionId, e.target.value);
@@ -162,9 +170,9 @@ export default function Product() {
       minPrice: minPrice || 0,
       maxPrice: maxPrice || 10000,
       minDiscount: discountValue || 0,
-      pageNumber: 0,
+      pageNumber: pageNumber || 0,
       sort: sortValue || "price_low",
-      pageSize: 10,
+      pageSize: 1,
       stock: stock,
     };
     return () => {
@@ -525,6 +533,15 @@ export default function Product() {
           </section>
         </main>
       </div>
+
+      <section className="flex items-center   justify-center">
+        <Pagination
+          className="py-[10vh]"
+          count={product.products?.totalPages}
+          color="secondary"
+          onChange={handlePaginationChange}
+        />
+      </section>
     </div>
   );
 }
