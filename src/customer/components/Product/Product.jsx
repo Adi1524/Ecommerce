@@ -106,7 +106,7 @@ export default function Product() {
   const navigate = useNavigate();
   const param = useParams();
   const dispatch = useDispatch();
-  const { product } = useSelector((store) => store);
+  const product = useSelector((store) => store.customerProduct);
 
   const handleFilter = (value, sectionId) => {
     // Create a URLSearchParams object from the current URL's search parameters
@@ -170,9 +170,9 @@ export default function Product() {
       minPrice: minPrice || 0,
       maxPrice: maxPrice || 10000,
       minDiscount: discountValue || 0,
-      pageNumber: pageNumber || 0,
+      pageNumber: pageNumber - 1 || 0,
       sort: sortValue || "price_low",
-      pageSize: 1,
+      pageSize: 5,
       stock: stock,
     };
     return () => {
@@ -520,8 +520,8 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full ">
                 <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md ">
-                  {product.products.content ? (
-                    product.products.content.map((item) => (
+                  {product.products?.content ? (
+                    product.products?.content.map((item) => (
                       <ProductCard key={item.id} item={item} />
                     ))
                   ) : (
