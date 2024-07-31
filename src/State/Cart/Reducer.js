@@ -18,6 +18,7 @@ const initialState = {
   loading: false,
   error: null,
   cartItems: [],
+  cartItemDelete: false,
 };
 
 export const customerCartReducer = (state = initialState, action) => {
@@ -57,6 +58,7 @@ export const customerCartReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
+        cartItemDelete: true,
         cartItems: state.cartItems.filter((item) => item.id !== action.payload),
       };
     case REMOVE_CART_ITEM_FAILURE:

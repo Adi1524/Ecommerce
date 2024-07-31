@@ -16,7 +16,7 @@ const Cart = () => {
 
   useEffect(() => {
     dispatch(get());
-  }, []);
+  }, [customerCart.cartItemDelete]);
 
   return (
     <div>

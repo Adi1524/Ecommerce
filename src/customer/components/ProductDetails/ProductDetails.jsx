@@ -143,7 +143,6 @@ export default function ProductDetails() {
               </li>
             </ol>
           </nav>
-
           {/* grid section */}
           <section className="  grid  lg:grid-cols-2 gap-x-8 gap-y-8">
             {/* Image gallery */}

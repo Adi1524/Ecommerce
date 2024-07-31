@@ -15,7 +15,7 @@ const ProductCard = ({ item }) => {
 
   useEffect(() => {
     console.log("item", item);
-    console.log("image Url", item.imageURl);
+    console.log("image Url", item.imageURl, item.id);
   }, []);
 
   return (

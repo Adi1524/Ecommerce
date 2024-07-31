@@ -99,7 +99,7 @@ export default function Product() {
   const priceValue = searchParams.get("price");
   const discountValue = searchParams.get("discount");
   const sortValue = searchParams.get("sort");
-  const pageNumber = searchParams.get("page");
+  const pageNumber = searchParams.get("page") || 1;
   const stock = searchParams.get("stock");
 
   const location = useLocation();
@@ -170,7 +170,7 @@ export default function Product() {
       minPrice: minPrice || 0,
       maxPrice: maxPrice || 10000,
       minDiscount: discountValue || 0,
-      pageNumber: pageNumber - 1 || 0,
+      pageNumber: pageNumber - 1,
       sort: sortValue || "price_low",
       pageSize: 5,
       stock: stock,
