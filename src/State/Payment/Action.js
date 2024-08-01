@@ -9,13 +9,14 @@ import {
   UPDATE_PAYMENT_REQUEST,
 } from "./ActionType";
 
-export const createPaymentLink = (reqData) => async (dispatch) => {
+export const createPaymentLink = (orderId) => async (dispatch) => {
   dispatch({ type: CREATE_PAYMENT_REQUEST });
   try {
-    const { data } = api.post(`/api/payment/${reqData.orderId}`, reqData);
+    const { data } = await api.post(`/api/payments/${orderId}`, {});
     if (data.payment_link_url) {
       window.location.href = data.payment_link_url;
     }
+    console.log("create payment", data);
     // dispatch({ type: CREATE_ORDER_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: CREATE_ORDER_FAILURE, payload: error });
@@ -25,9 +26,10 @@ export const createPaymentLink = (reqData) => async (dispatch) => {
 export const UpdatePayment = (reqData) => async (dispatch) => {
   dispatch({ type: UPDATE_PAYMENT_REQUEST });
   try {
-    const { data } = api.get(
-      `/api/payment?payment_Id=${reqData.orderId}&order_id=${reqData.orderId}`
+    const { data } = await api.get(
+      `/api/payments?payment_id=${reqData.paymentId}&order_id=${reqData.orderId}`
     );
+    console.log(data);
     if (data.payment_link_url) {
       window.location.href = data.payment_link_url;
     }

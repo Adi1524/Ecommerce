@@ -5,6 +5,7 @@ import CartItem from "../Cart/CartItem";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderById } from "../../../State/Order/Action";
 import { useLocation } from "react-router-dom";
+import { createPaymentLink } from "../../../State/Payment/Action";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,10 @@ const OrderSummary = () => {
   const orderId = searchParams.get("order_id");
   const { customerOrder } = useSelector((store) => store);
   console.log("order id", orderId);
+
+  const handleCheckout = () => {
+    dispatch(createPaymentLink(orderId));
+  };
 
   useEffect(() => {
     dispatch(getOrderById(orderId));
@@ -69,6 +74,7 @@ const OrderSummary = () => {
               <Button
                 variant="contained"
                 className="w-full h-[5vh] bg-[#9155fd]"
+                onClick={handleCheckout}
                 sx={{
                   bgcolor: "#9155fd",
                   px: "2.5rem",
